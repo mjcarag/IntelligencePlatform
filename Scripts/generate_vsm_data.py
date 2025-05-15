@@ -51,7 +51,10 @@ def generate_bottleneck_table(mode="time_to_next"):
     csv_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "data.csv"))
     print(f"Loading CSV from: {csv_path}")
 
-    df = pd.read_csv(csv_path, parse_dates=["WMHS_ROUTE_DT"], low_memory=False)
+    # df = pd.read_csv(csv_path, parse_dates=["WMHS_ROUTE_DT"], low_memory=False)
+    df = pd.read_csv(csv_path, low_memory=False)
+    df["WMHS_ROUTE_DT"] = pd.to_datetime(df["WMHS_ROUTE_DT"], errors="coerce")
+
 
     # Filter necessary columns
     df = df[["CLCL_CLAIM_ID", "WMHS_ROUTE_DT", "WQDF_DESC3"]].dropna()
