@@ -53,7 +53,7 @@ import os
 import sys
 
 sys.path.append(os.path.join(os.path.dirname(__file__), 'scripts'))
-from generate_vsm_data import generate_vsm_data_from_csv, get_unique_states_and_users,generate_bottleneck_table
+from Scripts.generate_vsm_data import generate_vsm_data_from_csv, get_unique_states_and_users,generate_bottleneck_table
 
 app = Flask(__name__, static_folder='static', template_folder='templates')
 
