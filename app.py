@@ -183,9 +183,11 @@ def bottleneck_tracker():
 def bottleneck_data():
     mode = request.args.get("mode", "time_to_next")
     try:
-        data = generate_bottleneck_table(mode, CSV_PATH)
-        return jsonify(data)
+        data = generate_bottleneck_table(mode)
+        return jsonify(data)  # should be a list
     except Exception as e:
+        import traceback
+        traceback.print_exc()
         return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
