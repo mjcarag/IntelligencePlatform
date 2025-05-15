@@ -58,7 +58,7 @@ from Scripts.generate_vsm_data import generate_vsm_data_from_csv, get_unique_sta
 app = Flask(__name__, static_folder='static', template_folder='templates')
 
 # CSV_PATH = r"D:\Office Works\VSC\Diagram Template\ProcessMining\Abbyy Timeline Jan-Dec 2024 CO MO TX 2.csv"
-CSV_PATH = os.path.join(os.path.dirname(__file__), "Abbyy Timeline Jan-Dec 2024 CO MO TX 2.csv")
+CSV_PATH = os.path.join(os.path.dirname(__file__), "data.csv")
 
 
 @app.route("/")
