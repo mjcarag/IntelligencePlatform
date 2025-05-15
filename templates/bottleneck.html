@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}Intelligence Platform - Bottleneck Analysis{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+<style>
+  #bottleneck-table_wrapper {
+    margin-top: 20px;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<h2>Bottleneck Analysis</h2>
+
+<div class="mb-3">
+  <label for="analysisMode" class="form-label">Select analysis:</label>
+  <select id="analysisMode" class="form-select" onchange="loadBottleneckData()">
+    <option value="time_to_next">Time from the event to the next</option>
+    <option value="time_between">Time between events</option>
+  </select>
+</div>
+
+<table id="bottleneck-table" class="display" style="width:100%">
+  <thead>
+    <tr>
+      <th>Event</th>
+      <th>Count</th>
+      <th>Per timeline</th>
+      <th>Average time (h)</th>
+      <th>New time (h)</th>
+      <th>Total time (h)</th>
+      <th>Total time %</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<script>
+function loadBottleneckData() {
+  const mode = document.getElementById('analysisMode').value;
+  fetch(`/bottleneck-data?mode=${mode}`)
+    .then(res => res.json())
+    .then(data => {
+      const table = $('#bottleneck-table').DataTable();
+      table.clear();
+      data.forEach(row => {
+        table.row.add([
+          row.event,
+          row.count,
+          row.per_timeline.toFixed(2),
+          row.avg_time_h.toLocaleString(),
+          row.new_time_h ? row.new_time_h.toLocaleString() : '-',
+          row.total_time_h.toLocaleString(),
+          row.total_time_pct.toFixed(2) + '%'
+        ]);
+      });
+      table.draw();
+    });
+}
+
+$(document).ready(function () {
+  $('#bottleneck-table').DataTable({
+    paging: false,
+    searching: false,
+    info: false,
+    order: [[3, 'desc']]
+  });
+  loadBottleneckData();
+});
+</script>
+{% endblock %}

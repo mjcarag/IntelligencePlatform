@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Intelligence Platform - Process Mining{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="https://unpkg.com/cytoscape@3.24.0/dist/cytoscape.min.css">
+{% endblock %}
+
+{% block content %}
+<h2>Interactive Process Mining</h2>
+<div id="filters">
+  <label for="state">Filter by State:</label>
+  <select id="state"><option value="">All</option></select>
+
+  <label for="user">Filter by User:</label>
+  <select id="user"><option value="">All</option></select>
+
+  <label for="freq">Min Frequency:</label>
+  <select id="freq">
+    <option value="0">All</option>
+    <option value="50">≥ 50</option>
+    <option value="100">≥ 100</option>
+    <option value="500">≥ 500</option>
+  </select>
+</div>
+
+<div id="cy" style="height: 85vh; width: 100%; background: #fff;"></div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://unpkg.com/cytoscape@3.24.0/dist/cytoscape.min.js"></script>
+<script src="https://unpkg.com/cytoscape-cose-bilkent@4.0.0/cytoscape-cose-bilkent.js"></script>
+<script>
+  cytoscape.use(window.cytoscapeCoseBilkent);
+</script>
+<script src="{{ url_for('static', filename='js/process_mining.js') }}"></script>
+{% endblock %}
