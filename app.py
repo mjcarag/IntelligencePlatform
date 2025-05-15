@@ -107,6 +107,8 @@ def bottleneck_data():
         data = generate_bottleneck_table(mode)
         return jsonify(data)
     except Exception as e:
+        import traceback
+        traceback.print_exc()
         return jsonify({"error": str(e)}), 500
 
 

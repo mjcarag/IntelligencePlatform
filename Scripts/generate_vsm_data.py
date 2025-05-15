@@ -100,7 +100,7 @@ def get_color_by_frequency(freq):
         return "#2980b9"  # blue
 
 def get_unique_states_and_users(csv_path):
-    df = pd.read_csv(csv_path)
+    df = pd.read_csv(csv_path, low_memory=False)
     states = sorted(df['State'].dropna().unique().tolist())
     users = sorted(df['USUS_USR_ID'].dropna().unique().tolist())
     return states, users
