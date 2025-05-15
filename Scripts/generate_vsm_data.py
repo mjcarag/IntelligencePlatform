@@ -48,7 +48,8 @@ def generate_vsm_data_from_csv(csv_path, state_filter=None, user_filter=None, mi
 def generate_bottleneck_table(mode="time_to_next"):
     # Load the CSV — adjust path if needed
     # csv_path = r"D:\Office Works\VSC\Diagram Template\ProcessMining\Abbyy Timeline Jan-Dec 2024 CO MO TX 2.csv"
-    csv_path = os.path.join(os.path.dirname(__file__), "data.csv")
+    csv_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "data.csv"))
+    print(f"Loading CSV from: {csv_path}")
 
     df = pd.read_csv(csv_path, parse_dates=["WMHS_ROUTE_DT"], low_memory=False)
 
