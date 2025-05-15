@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: flask-vsm-app
+    name: IntelligencePlatform
     env: python
     buildCommand: ""
     startCommand: "python app.py"
