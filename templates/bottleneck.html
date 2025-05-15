@@ -1,12 +1,40 @@
 {% extends "base.html" %}
 
-{% block title %}Intelligence Platform - Bottleneck Analysis{% endblock %}
+{% block title %}Bottleneck Analysis{% endblock %}
 
 {% block head %}
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
 <style>
   #bottleneck-table_wrapper {
     margin-top: 20px;
+  }
+  .loader {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: inline-block;
+    border-top: 4px solid #FFF;
+    border-right: 4px solid transparent;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+    position: relative;
+  }
+  .loader::after {
+    content: '';
+    box-sizing: border-box;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border-left: 4px solid #FF3D00;
+    border-bottom: 4px solid transparent;
+    animation: rotation 0.5s linear infinite reverse;
+  }
+  @keyframes rotation {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
   }
 </style>
 {% endblock %}
@@ -20,6 +48,11 @@
     <option value="time_to_next">Time from the event to the next</option>
     <option value="time_between">Time between events</option>
   </select>
+</div>
+
+<div id="loading" style="display: none; text-align: center; margin-top: 20px;">
+  <span class="loader"></span>
+  <p>Loading data, please wait...</p>
 </div>
 
 <table id="bottleneck-table" class="display" style="width:100%">
@@ -43,24 +76,36 @@
 <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 <script>
 function loadBottleneckData() {
+  document.getElementById("loading").style.display = "block";
   const mode = document.getElementById('analysisMode').value;
   fetch(`/bottleneck-data?mode=${mode}`)
     .then(res => res.json())
     .then(data => {
       const table = $('#bottleneck-table').DataTable();
       table.clear();
+      if (!Array.isArray(data)) {
+        console.error("Expected array but got:", data);
+        document.getElementById("loading").style.display = "none";
+        return;
+      }
       data.forEach(row => {
         table.row.add([
           row.event,
           row.count,
-          row.per_timeline.toFixed(2),
-          row.avg_time_h.toLocaleString(),
+          row.per_timeline?.toFixed?.(2) ?? '-',
+          row.avg_time_h?.toLocaleString?.() ?? '-',
           row.new_time_h ? row.new_time_h.toLocaleString() : '-',
-          row.total_time_h.toLocaleString(),
-          row.total_time_pct.toFixed(2) + '%'
+          row.total_time_h?.toLocaleString?.() ?? '-',
+          row.total_time_pct?.toFixed?.(2) + '%' ?? '-'
         ]);
       });
       table.draw();
+    })
+    .catch(err => {
+      console.error("Failed to load bottleneck data:", err);
+    })
+    .finally(() => {
+      document.getElementById("loading").style.display = "none";
     });
 }
 

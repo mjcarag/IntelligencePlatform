@@ -174,6 +174,7 @@ function renderGraph(elements) {
 }
 
 async function loadGraph() {
+  document.getElementById("loading").style.display = "block";
   const state = document.getElementById('state').value;
   const user = document.getElementById('user').value;
   const freq = document.getElementById('freq').value;
@@ -184,6 +185,7 @@ async function loadGraph() {
   const response = await fetch(`/vsm-data?${params.toString()}`);
   const elements = await response.json();
   renderGraph(elements);
+  document.getElementById("loading").style.display = "none";
 }
 
 document.getElementById('state').addEventListener('change', loadGraph);
